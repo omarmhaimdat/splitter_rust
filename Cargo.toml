@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Omar MHAIMDAT <omarmhaimdat@gmail.com>"]
 description = "Rsplitter is a tool to split words from text that contains no spaces."
-keywords = ["split", "splitter", "word splitter"]
+keywords = ["split", "splitter", "words", "text"]
 license = "MIT"
 
 
