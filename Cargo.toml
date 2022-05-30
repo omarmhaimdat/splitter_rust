@@ -1,6 +1,6 @@
 [package]
 name = "rsplitter"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Omar MHAIMDAT <omarmhaimdat@gmail.com>"]
 description = "Rsplitter is a tool to split words from text that contains no spaces."
