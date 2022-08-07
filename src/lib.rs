@@ -90,6 +90,19 @@ fn minimal_cost(text: String, cost: &mut Vec<f32>, text_length: u32) -> Vec<Stri
 
 // Add documentation
 // Returns the best match for a word in the corpus.
+/// A word is considered to be a match if it is within `max_distance` of the start of the word.
+/// # Arguments
+/// * `text` - The text to be split
+/// # Returns
+/// A String object containing the split text
+/// # Examples
+/// ```
+/// use rsplitter::split;
+/// let text = "Thisisatest";
+/// let result = split(text.to_string());
+/// println!("{:?}", result);
+/// ```
+/// Result: "This is a test"
 pub fn split(text: String) -> String {
     let mut cost: Vec<f32> = Vec::new();
     cost.push(0.0);
