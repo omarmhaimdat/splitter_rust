@@ -98,9 +98,9 @@ fn minimal_cost(text: String, cost: &mut Vec<f32>, text_length: u32) -> Vec<Stri
 /// # Examples
 /// ```
 /// use rsplitter::split;
-/// let text = "Thisisatest";
+/// let text = "rustisgreat";
 /// let result = split(text.to_string());
-/// println!("{:?}", result);
+/// assert_eq!(result, "rust is great");
 /// ```
 /// Result: "This is a test"
 pub fn split(text: String) -> String {

@@ -16,7 +16,7 @@ cargo install rsplitter
 use rsplitter::split;
 
 fn main() {
-    let words = split("Rustisgreat");
+    let words = split("rustisgreat");
     println!("{:?}", words);
 }
 ```
