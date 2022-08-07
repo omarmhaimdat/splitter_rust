@@ -4,18 +4,37 @@ use std::collections::HashMap;
 use std::include_str;
 
 lazy_static! {
-    static ref COST_DICT: (HashMap<String, f32>, i32) = get_cost_dict();
+    static ref COST_DICT: (HashMap<String, f32>, i32) = get_cost_dict("".to_string());
 }
 
-fn lines_from_file() -> Vec<String> {
-    let my_str = include_str!("corpus.txt");
-    my_str.lines().map(|l| l.to_string()).collect()
+/// Returns the path to build a dictionary of all the costs of each word.
+/// The file is a text file with each line containing a word.
+/// The order of the words in the file will define the score of each word.
+/// The further a word is from the start of the file, the higher its score, thus it will be
+/// less likely to be used.
+macro_rules! corpus {
+    () => {
+        "corpus.txt"
+    };
+}
+
+fn lines_from_file(corpus_path: String) -> Vec<String> {
+    if corpus_path.is_empty() {
+        let my_str = include_str!(corpus!());
+        my_str.lines().map(|l| l.to_string()).collect()
+    } else {
+        std::fs::read_to_string(corpus_path)
+            .unwrap()
+            .lines()
+            .map(|l| l.to_string())
+            .collect()
+    }
 }
 
 /// Get the cost dictionary from a list of words
-fn get_cost_dict() -> (HashMap<String, f32>, i32) {
+fn get_cost_dict(corpus_path: String) -> (HashMap<String, f32>, i32) {
     let mut dict = HashMap::new();
-    let words = lines_from_file();
+    let words = lines_from_file(corpus_path);
     let words_length = words.len() as f32;
     let mut max_word = 0;
     for (idx, word) in words.iter().enumerate() {
@@ -69,6 +88,8 @@ fn minimal_cost(text: String, cost: &mut Vec<f32>, text_length: u32) -> Vec<Stri
     return result;
 }
 
+// Add documentation
+// Returns the best match for a word in the corpus.
 pub fn split(text: String) -> String {
     let mut cost: Vec<f32> = Vec::new();
     cost.push(0.0);
@@ -78,13 +99,15 @@ pub fn split(text: String) -> String {
     return texts.into_iter().rev().collect::<Vec<String>>().join(" ");
 }
 
+// pub fn split() {}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     #[test]
     fn test_split() {
-        let text = "helloworld";
+        let text = "bankofjordan";
         let result = split(text.to_string());
-        assert_eq!(result, "hello world");
+        assert_eq!(result, "bank of jordan");
     }
 }
