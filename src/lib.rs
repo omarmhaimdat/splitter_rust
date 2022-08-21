@@ -1,4 +1,4 @@
-// use include_dir::{include_dir, Dir};
+mod language_model;
 use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::include_str;
@@ -60,7 +60,11 @@ fn best_match(i: i32, text: String, cost: &mut Vec<f32>) -> (f32, f32) {
     for (k, c) in slice.iter().enumerate() {
         let word_cost = COST_DICT
             .0
-            .get(&text[(i - k as i32 - 1) as usize..i as usize].to_string())
+            .get(
+                &text[(i - k as i32 - 1) as usize..i as usize]
+                    .to_string()
+                    .to_lowercase(),
+            )
             .map_or(f32::MAX, |x| *x);
         array_min.push((c + word_cost, k as f32 + 1.0));
     }
@@ -88,7 +92,6 @@ fn minimal_cost(text: String, cost: &mut Vec<f32>, text_length: u32) -> Vec<Stri
     return result;
 }
 
-// Add documentation
 // Returns the best match for a word in the corpus.
 /// A word is considered to be a match if it is within `max_distance` of the start of the word.
 /// # Arguments
@@ -122,5 +125,39 @@ mod tests {
         let text = "bankofjordan";
         let result = split(text.to_string());
         assert_eq!(result, "bank of jordan");
+    }
+
+    #[test]
+    fn test_split_with_language_model() {
+        let text = "Thequickbrownfoxjumpsoverthelazydog";
+        let mut language_model: language_model::LanguageModel = language_model::LanguageModel {
+            corpus_path: "".to_string(),
+            cost_dict: None,
+        };
+        let result = language_model.split(text.to_string());
+        assert_eq!(result, "The quick brown fox jumps over the lazy dog");
+    }
+
+    #[test]
+    fn test_split_speed() {
+        let text = "Thequickbrownfoxjumpsoverthelazydog";
+        let start = std::time::Instant::now();
+        let result = split(text.to_string());
+        let end = std::time::Instant::now();
+        let duration = end.duration_since(start);
+        println!("{:?}", duration);
+        assert_eq!(result, "The quick brown fox jumps over the lazy dog");
+        assert!(duration.as_millis() < 300);
+    }
+    #[test]
+    fn test_split_speed_using_language_model() {
+        let text = "Thequickbrownfoxjumpsoverthelazydog";
+        let start = std::time::Instant::now();
+        let result = split(text.to_string());
+        let end = std::time::Instant::now();
+        let duration = end.duration_since(start);
+        println!("{:?}", duration);
+        assert_eq!(result, "The quick brown fox jumps over the lazy dog");
+        assert!(duration.as_millis() < 300);
     }
 }
